@@ -1,53 +1,55 @@
 import Cell from './Cell';
+import Matrix from './Matrix';
 
 export default class Field {
-    private _field: Cell[];
-    public get cells() {
+    private _field: Matrix<Cell>;
+
+    public get fieldMatrix(): Matrix<Cell> {
         return this._field;
     }
 
+    public get cells(): Cell[] {
+        return this._field.items;
+    }
+
     constructor(private _width: number = 10, private _height: number = 10, private _bombCount = 10) {
-        this._field = Array.from({length: this._width * this._height}, () => ({ bomb: false, closed: true }));
+        this._field = new Matrix(_width, _height);
+        this._field.fill(() => ({ bomb: false, closed: true }));
         this.generate();
     }
 
-    public cellAt(x: number, y: number): Cell | null {
-        if (x < 0 || x >= this._width) {
-            return null;
-        }
-        if (y < 0 || y >= this._height) {
-            return null;
-        }
-        return this._field[x*this._width + y];
-    }
-
-    public modifyCellAt(x: number, y: number, callback: (cell: Cell) => void): void {
-        const cell = this.cellAt(x, y);
-        if (cell != null) {
-            callback(cell);
-        }
+    public cellAt(x: number, y: number): Cell {
+        return this._field.itemAt(x, y);
     }
  
 
     public open(x: number, y: number): void {
-        // if (x < 0 || x >= this._height || y < 0 || y >= this._width)
-        //     return;
+        const thisCell = this.cellAt(x, y);
+        if (!thisCell.closed) {
+            return;
+        }
 
-        // const current = this.cellAt(x,y);
-        // current.closed = false;
-        // if (current.bomb || current.number)
-        //     return;
-        
-        // for (let x = -1; x <= 1; x++)
-        // {
-        //     for (let y = -1; y <= 1; y++) {
-        //         if (x === 0 && y === 0 || !this.cellAt(x+x,y+y).closed)
-        //             continue;
-        //         this.open(x+x, y+y)
-        //     }
-        // }
+        thisCell.closed = false;
 
-        // current.closed = false;
+        if (thisCell.bomb) {
+            return;
+        }
+
+        if (thisCell.number != null) {
+            return;
+        }
+
+        const openInner = (x: number, y: number) => {
+            this.fieldMatrix.get3X3SubMatrixAround(x, y).iterate((cell, x1, y1) => {
+                if (!cell || cell.bomb || !cell.closed) {
+                    return;
+                }
+                cell.closed = false;
+                openInner(x1, y1);
+            })
+        }
+
+        openInner(x, y);
     }
 
     private generate(): void {
@@ -57,12 +59,18 @@ export default class Field {
     public populateBombsFromPattern(pattern: string): void {
         const bomb = '*';
         const empty = '_';
+        const boundary = '|'
 
-        this.iterateField((cell, x, y) => {
-            if (bomb==pattern[x*this._height+y]){
-                cell.bomb = true;
-            } 
-        })
+        let x = 0;
+        let y = 0;
+        for (let currentSign of pattern) {
+            switch(currentSign) {
+                case boundary: x++; y = 0; continue;
+                case bomb: this.cellAt(x, y).bomb = true; break;
+                case empty: this.cellAt(x, y).bomb = false; break;
+            }
+            y++;
+        }
 
         this.setNumbers()
     }
@@ -71,7 +79,7 @@ export default class Field {
         let bombCount = this._bombCount;
         while (bombCount > 0) {
             const position = [this.random(this._width), this.random(this._height)];
-            const cell = this.cellAt(position[0], position[1])!
+            const cell = this.cellAt(position[0], position[1])
             if (cell.bomb)
             {
                 continue;
@@ -84,30 +92,17 @@ export default class Field {
     }
     
     private setNumbers(): void {
+        
         this.iterateField((cell, x, y) => {
+            
             if (cell.bomb){
                 cell.number = null;
                 return;
             }
-            let number = 
-                this.checkBomb(x-1,y-1) + 
-                this.checkBomb(x,y-1) + 
-                this.checkBomb(x+1,y-1) + 
-                this.checkBomb(x-1,y) + 
-                //this.checkBomb(x,y) + 
-                this.checkBomb(x+1,y) + 
-                this.checkBomb(x-1,y+1) + 
-                this.checkBomb(x,y+1) + 
-                this.checkBomb(x+1,y+1);
+            const cellsAround = this._field.getItemsAround(x, y);
+            const number = cellsAround.reduce((result, cell) => result + (cell.bomb ? 1 : 0), 0);
             cell.number = number || null;
         })
-    }
-    
-    private checkBomb(x: number, y: number): number {
-        const cell = this.cellAt(x,y);
-        if (cell == null)
-            return 0;
-        return cell.bomb ? 1 : 0
     }
     
     private random(max: number): number {
@@ -115,11 +110,7 @@ export default class Field {
     }
 
     public iterateField(callback: (cell: Cell, x: number, y: number) => void): void {
-        for(let x = 0; x < this._height; x++) {
-            for(let y = 0; y < this._width; y++) {
-                callback(this.cellAt(x, y)!, x, y);
-            }
-        }
+        this._field.iterate(callback);
     }
     
 }

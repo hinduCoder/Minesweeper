@@ -68,6 +68,12 @@ export default class Matrix<T> {
         return result.filter(item => item !== undefined) as T[];
     }
 
+    public get3X3SubMatrixAround(x: number, y: number): Matrix<T | undefined> {
+        const subMatrix = new Matrix<T | undefined>(3, 3);
+        subMatrix.fill((x1, y1) => this.unsageGetItemAt(x+x1-1, y+y1-1));
+        return subMatrix;
+    }
+
     private calculateIndex(x: number, y: number): number {
         return x*this._width + y;
     }

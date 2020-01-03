@@ -77,3 +77,11 @@ it('get fields around bottom left', () => {
     expect(items).toEqual([21,22,32]);
 });
 
+it('get submatrix', () => {
+    const matrix = new Matrix<number>(5, 5);
+    matrix.fill((x, y) => (x+1)*10 + y+1);
+
+    const newMatrix = matrix.get3X3SubMatrixAround(2, 2);
+
+    expect(newMatrix.items).toEqual([22,23,24,32,33,34,42,43,44]);
+});
