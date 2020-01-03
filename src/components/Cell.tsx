@@ -10,7 +10,7 @@ interface DispatchProps {
 interface OwnProps {
     bomb: boolean;
     closed: boolean;
-    number: number;
+    number?: number | null;
     x: number;
     y: number;
 }

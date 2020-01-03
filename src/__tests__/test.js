@@ -41,20 +41,28 @@ it('Populates from pattern nicely', () => {
 })
 
 it('opens bubble', () => {
-    const field = new Field(3, 3, 0);
-    field.populateBombsFromPattern('__*|__*|***');
+    const field = new Field(4, 4, 0);
+    field.populateBombsFromPattern('___*|___*|___*|****');
 
     field.open(0, 0);
 
     expect(field.cellAt(0, 0).closed).toBeFalsy();
     expect(field.cellAt(0, 1).closed).toBeFalsy();
-    expect(field.cellAt(0, 2).closed).toBeTruthy();
+    expect(field.cellAt(0, 2).closed).toBeFalsy();
+    expect(field.cellAt(0, 3).closed).toBeTruthy();
 
     expect(field.cellAt(1, 0).closed).toBeFalsy();
     expect(field.cellAt(1, 1).closed).toBeFalsy();
-    expect(field.cellAt(1, 2).closed).toBeTruthy();
+    expect(field.cellAt(1, 2).closed).toBeFalsy();
+    expect(field.cellAt(1, 3).closed).toBeTruthy();
 
-    expect(field.cellAt(2, 0).closed).toBeTruthy();
-    expect(field.cellAt(2, 1).closed).toBeTruthy();
-    expect(field.cellAt(2, 2).closed).toBeTruthy();
+    expect(field.cellAt(2, 0).closed).toBeFalsy();
+    expect(field.cellAt(2, 1).closed).toBeFalsy();
+    expect(field.cellAt(2, 2).closed).toBeFalsy();
+    expect(field.cellAt(2, 3).closed).toBeTruthy();
+
+    expect(field.cellAt(3, 0).closed).toBeTruthy();
+    expect(field.cellAt(3, 1).closed).toBeTruthy();
+    expect(field.cellAt(3, 2).closed).toBeTruthy();
+    expect(field.cellAt(3, 3).closed).toBeTruthy();
 })

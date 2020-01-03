@@ -1,3 +1,5 @@
+import { resolvePlugin } from "@babel/core";
+
 export default class Matrix<T> {
     private _items: T[];
 
@@ -72,6 +74,18 @@ export default class Matrix<T> {
         const subMatrix = new Matrix<T | undefined>(3, 3);
         subMatrix.fill((x1, y1) => this.unsageGetItemAt(x+x1-1, y+y1-1));
         return subMatrix;
+    }
+
+    public toDoubleArray(): T[][] {
+        const result:T[][] = [];
+        for (let x = 0; x < this.width; x++) {
+            const row:T[] = [];
+            result.push(row);
+            for (let y = 0; y < this.height; y++) {
+                row.push(this.itemAt(x, y));
+            }
+        }
+        return result;
     }
 
     private calculateIndex(x: number, y: number): number {

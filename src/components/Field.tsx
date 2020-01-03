@@ -2,9 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Cell from './Cell'
 import { Store } from '../store'
+import ICell from '../code/Cell';
 
 interface StateProps {
-    field: { closed: boolean, bomb: boolean, number: number }[][]
+    field: ICell[][]
 }
 
 type Props = StateProps;
@@ -13,7 +14,7 @@ const Field: React.FunctionComponent<Props> = function({ field }: Props) {
     return <React.Fragment>
         {field.map((r, i) => <div className="row" key={i}>
                 {r.map((c, j) => 
-                    <Cell key={j} y={i} x={j} closed={c.closed} bomb={c.bomb} number={c.number}/>)}
+                    <Cell key={j} y={j} x={i} closed={c.closed} bomb={c.bomb} number={c.number}/>)}
                 </div>)}
     </React.Fragment>
 }
