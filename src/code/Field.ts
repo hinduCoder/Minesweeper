@@ -3,6 +3,7 @@ import Matrix from './Matrix';
 
 export default class Field {
     private _field: Matrix<Cell>;
+    private _firstOpenedPosition?: number[];
 
     public get fieldMatrix(): Matrix<Cell> {
         return this._field;
@@ -23,7 +24,6 @@ export default class Field {
     constructor(private _width: number = 10, private _height: number = 10, private _bombCount = 10) {
         this._field = new Matrix(_width, _height);
         this._field.fill(() => ({ bomb: false, closed: true, flagged: false }));
-        this.generate();
     }
 
     public cellAt(x: number, y: number): Cell {
@@ -32,6 +32,11 @@ export default class Field {
  
 
     public open(x: number, y: number): void {
+        if (!this._firstOpenedPosition) {
+            this._firstOpenedPosition = [x, y];
+            this.generate();
+        }
+
         const thisCell = this.cellAt(x, y);
         if (!thisCell.closed || thisCell.flagged) {
             return;
@@ -106,6 +111,11 @@ export default class Field {
         let bombCount = this._bombCount;
         while (bombCount > 0) {
             const position = [this.random(this._height), this.random(this._width)];
+            
+            if (Math.abs(this._firstOpenedPosition![0]-position[0]) < 2 && Math.abs(this._firstOpenedPosition![1]-position[1]) < 2) {
+                continue;
+            }
+
             const cell = this.cellAt(position[0], position[1])
             if (cell.bomb)
             {
