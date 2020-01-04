@@ -45,7 +45,8 @@ export default class Field {
                     return;
                 }
                 cell.closed = false;
-                openInner(x1, y1);
+                if (cell.number == null)
+                    openInner(x+x1-1, y+y1-1);
             })
         }
 

@@ -1,4 +1,5 @@
 import Field from "../code/Field"
+import { file } from "@babel/types";
 
 it('Hello', () => {
     const field = new Field();
@@ -41,28 +42,11 @@ it('Populates from pattern nicely', () => {
 })
 
 it('opens bubble', () => {
-    const field = new Field(4, 4, 0);
-    field.populateBombsFromPattern('___*|___*|___*|****');
+    const field = new Field(5, 5, 0);
+    field.populateBombsFromPattern('_____|_____|__*__|_____|_____');
 
     field.open(0, 0);
 
-    expect(field.cellAt(0, 0).closed).toBeFalsy();
-    expect(field.cellAt(0, 1).closed).toBeFalsy();
-    expect(field.cellAt(0, 2).closed).toBeFalsy();
-    expect(field.cellAt(0, 3).closed).toBeTruthy();
+    expect(field.cells.every(c => c.bomb && c.closed || !c.bomb && !c.closed)).toBeTruthy();
 
-    expect(field.cellAt(1, 0).closed).toBeFalsy();
-    expect(field.cellAt(1, 1).closed).toBeFalsy();
-    expect(field.cellAt(1, 2).closed).toBeFalsy();
-    expect(field.cellAt(1, 3).closed).toBeTruthy();
-
-    expect(field.cellAt(2, 0).closed).toBeFalsy();
-    expect(field.cellAt(2, 1).closed).toBeFalsy();
-    expect(field.cellAt(2, 2).closed).toBeFalsy();
-    expect(field.cellAt(2, 3).closed).toBeTruthy();
-
-    expect(field.cellAt(3, 0).closed).toBeTruthy();
-    expect(field.cellAt(3, 1).closed).toBeTruthy();
-    expect(field.cellAt(3, 2).closed).toBeTruthy();
-    expect(field.cellAt(3, 3).closed).toBeTruthy();
 })
