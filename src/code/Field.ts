@@ -79,7 +79,7 @@ export default class Field {
     private populateBombs(): void {
         let bombCount = this._bombCount;
         while (bombCount > 0) {
-            const position = [this.random(this._width), this.random(this._height)];
+            const position = [this.random(this._height), this.random(this._width)];
             const cell = this.cellAt(position[0], position[1])
             if (cell.bomb)
             {

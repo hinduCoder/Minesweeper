@@ -24,21 +24,24 @@ it('Get out of range throws an error', () => {
 })
 
 it('fill method fills as expected', () => {
-    const matrix = new Matrix<number>(3, 3);
+    const matrix = new Matrix<number>(4, 3);
     
     matrix.fill((x, y) => (x+1)*10 + y+1);
 
     expect(matrix.itemAt(0, 0)).toBe(11);
     expect(matrix.itemAt(0, 1)).toBe(12);
     expect(matrix.itemAt(0, 2)).toBe(13);
+    expect(matrix.itemAt(0, 3)).toBe(14);
 
     expect(matrix.itemAt(1, 0)).toBe(21);
     expect(matrix.itemAt(1, 1)).toBe(22);
     expect(matrix.itemAt(1, 2)).toBe(23);
+    expect(matrix.itemAt(1, 3)).toBe(24);
 
     expect(matrix.itemAt(2, 0)).toBe(31);
     expect(matrix.itemAt(2, 1)).toBe(32);
     expect(matrix.itemAt(2, 2)).toBe(33);
+    expect(matrix.itemAt(2, 3)).toBe(34);
 });
 
 it('get fields around', () => {
@@ -85,3 +88,14 @@ it('get submatrix', () => {
 
     expect(newMatrix.items).toEqual([22,23,24,32,33,34,42,43,44]);
 });
+
+it('to double array', () => {
+    const matrix = new Matrix<number>(5, 3);
+    matrix.fill((x, y) => (x+1)*10 + y+1);
+
+    const m = matrix.toDoubleArray();
+    
+    expect(m).toHaveLength(3);
+    expect(m.every(r => r.length == 5)).toBeTruthy();
+    m.forEach((row, x) => row.forEach((item, y) => expect(m[x][y]).toEqual((x+1)*10 + y+1)));
+})

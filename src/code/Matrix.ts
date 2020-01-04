@@ -20,24 +20,24 @@ export default class Matrix<T> {
     }
 
     public itemAt(x: number, y: number): T  {
-        if (x < 0 || x >= this._width) {
+        if (x < 0 || x >= this._height) {
             throw new Error('x is out of range');
         }
-        if (y < 0 || y >= this._height) {
+        if (y < 0 || y >= this._width) {
             throw new Error('y is out of range');
         }
         return this._items[this.calculateIndex(x, y)];
     }
 
     private unsageGetItemAt(x: number, y: number): T | undefined {
-        if (x < 0 || x >= this._width || y < 0 || y >= this._height) {
+        if (x < 0 || x >= this._height || y < 0 || y >= this._width) {
             return undefined;
         }
         return this._items[this.calculateIndex(x, y)];
     }
 
     public setItemAt(x: number, y: number, value: T) {
-        if (x < 0 || x >= this._width || y < 0 || y >= this._height) {
+        if (x < 0 || x >= this._height || y < 0 || y >= this._width) {
             return;
         }
 
@@ -78,10 +78,10 @@ export default class Matrix<T> {
 
     public toDoubleArray(): T[][] {
         const result:T[][] = [];
-        for (let x = 0; x < this.width; x++) {
+        for (let x = 0; x < this.height; x++) {
             const row:T[] = [];
             result.push(row);
-            for (let y = 0; y < this.height; y++) {
+            for (let y = 0; y < this.width; y++) {
                 row.push(this.itemAt(x, y));
             }
         }

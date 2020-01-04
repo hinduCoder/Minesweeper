@@ -12,7 +12,7 @@ interface OpenAction extends ActionBase {
 
 type Action = OpenAction;
 
-const field = new Field(10, 10, 10);
+const field = new Field(30, 16, 99);
 
 export function getInitialState(): Store {
     return {
