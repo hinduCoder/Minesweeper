@@ -14,7 +14,7 @@ export default class Field {
 
     constructor(private _width: number = 10, private _height: number = 10, private _bombCount = 10) {
         this._field = new Matrix(_width, _height);
-        this._field.fill(() => ({ bomb: false, closed: true }));
+        this._field.fill(() => ({ bomb: false, closed: true, flagged: false }));
         this.generate();
     }
 
@@ -25,13 +25,14 @@ export default class Field {
 
     public open(x: number, y: number): void {
         const thisCell = this.cellAt(x, y);
-        if (!thisCell.closed) {
+        if (!thisCell.closed || thisCell.flagged) {
             return;
         }
 
         thisCell.closed = false;
 
         if (thisCell.bomb) {
+            this.cells.forEach(c => c.closed = false);
             return;
         }
 

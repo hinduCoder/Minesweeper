@@ -4,13 +4,15 @@ import { connect } from 'react-redux';
 import './Cell.css';
 
 interface DispatchProps {
-    open: () => void
+    open: () => void,
+    toggleFlag: () => void
 }
 
 interface OwnProps {
     bomb: boolean;
     closed: boolean;
     number?: number | null;
+    flagged: boolean;
     x: number;
     y: number;
 }
@@ -21,16 +23,31 @@ function Cell(props: Props) {
     return (
     <div 
         className={classnames('cell', { closed: props.closed })} 
-        onClick={() => props.open()}>
-            {props.bomb ? '💣' : props.number}
+        onClick={() => props.open()} 
+        onContextMenu={e => { e.preventDefault(); props.toggleFlag() }}>
+            {renderContent()}
     </div>);
+
+    function renderContent() {
+        if (props.closed) {
+            return (
+                <div className="cover">
+                    {props.flagged ? '⛳️' : null}
+                </div>
+            );
+        } else {
+            return props.bomb ? '💣' : props.number
+        }
+    }
 }
+
 interface DispatchProps {
     open: () => void
 }
 
 export default connect<{}, DispatchProps, OwnProps>(null, (dispatch, props) => {
     return {
-        open: () => dispatch({type: 'OPEN', x: props.x, y: props.y})
+        open: () => dispatch({type: 'OPEN', x: props.x, y: props.y}),
+        toggleFlag: () => dispatch({type: 'TOGGLE_FLAG', x: props.x, y: props.y}) 
     }
 })(Cell);

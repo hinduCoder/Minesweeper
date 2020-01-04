@@ -12,7 +12,7 @@
     user-select: none;
   }
   
-  .cell.closed:after {
+  .cell > .cover {
     background-color:gray;
     content: '';
     width: 100%;
