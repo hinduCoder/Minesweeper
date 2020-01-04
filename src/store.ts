@@ -4,7 +4,8 @@ import logger from 'redux-logger'
 import Cell from './code/Cell'
 
 export interface Store {
-    field: Cell[][]
+    field: Cell[][],
+    bombs: number
 }
 
 export default createStore(reducer, getInitialState(), applyMiddleware(logger));

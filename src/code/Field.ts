@@ -12,6 +12,14 @@ export default class Field {
         return this._field.items;
     }
 
+    public get bombCount(): number {
+        return this._bombCount;
+    }
+
+    public get bombsRemaining(): number {
+        return this.bombCount - this.cells.filter(c => c.flagged).length;
+    }
+
     constructor(private _width: number = 10, private _height: number = 10, private _bombCount = 10) {
         this._field = new Matrix(_width, _height);
         this._field.fill(() => ({ bomb: false, closed: true, flagged: false }));

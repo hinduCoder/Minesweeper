@@ -22,7 +22,8 @@ const field = new Field(30, 16, 99);
 //TODO вот с этим надо что-то сделать
 export function getInitialState(): Store {
     return {
-        field: _.cloneDeep(field.fieldMatrix.toDoubleArray())
+        field: _.cloneDeep(field.fieldMatrix.toDoubleArray()),
+        bombs: field.bombsRemaining
     }
 }
 
