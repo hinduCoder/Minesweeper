@@ -35,6 +35,9 @@ export default function(store: Store | undefined, action: Action): Store {
             const cell = field.cellAt(action.x, action.y);
             cell.flagged = !cell.flagged;
             return getInitialState();
+        case 'AUTO_OPEN':
+            field.autoOpen(action.x, action.y);
+            return getInitialState();
         default: return getInitialState();
     }
 }

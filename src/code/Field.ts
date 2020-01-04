@@ -54,6 +54,23 @@ export default class Field {
         openInner(x, y);
     }
 
+    public autoOpen(x: number, y: number): void {
+        const cell = this.cellAt(x, y);
+        if (cell.closed || cell.number == null) {
+            return;
+        }
+
+        const cellsAround = this.fieldMatrix.getItemsAround(x, y);
+
+        if (cellsAround.filter(c => c.flagged).length === cell.number) {
+            this.fieldMatrix.get3X3SubMatrixAround(x, y).iterate((cell, x1, y1) => {
+                if (!cell || cell.flagged)
+                    return;
+                this.open(x+x1-1, y+y1-1);
+            })
+        }
+    }
+
     private generate(): void {
         this.populateBombs();
     }
