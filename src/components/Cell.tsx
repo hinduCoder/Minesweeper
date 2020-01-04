@@ -22,7 +22,7 @@ function Cell(props: Props) {
     <div 
         className={classnames('cell', { closed: props.closed })} 
         onClick={() => props.open()}>
-            {props.bomb ? '*' : props.number}
+            {props.bomb ? '💣' : props.number}
     </div>);
 }
 interface DispatchProps {

@@ -4,6 +4,8 @@ import Cell from './Cell'
 import { Store } from '../store'
 import ICell from '../code/Cell';
 
+import './Field.css';
+
 interface StateProps {
     field: ICell[][]
 }
